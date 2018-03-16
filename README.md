@@ -1,3 +1,3 @@
 # Machine-Learning
 
-## Coursera Machine Learning Programing Homework with Python
+## Coursera Machine Learning Programming Homework with Python
