@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.optimize as op
-from logistic_regression.alglib import plot, map_feature, cost_reg, gradient_reg, plot_boundary
+from logistic_regression.alglib import plot, map_feature, cost_reg, gradient_reg, plot_boundary, predict
 import matplotlib.pyplot as plt
 
 
@@ -38,6 +38,11 @@ def main():
                          jac=gradient_reg)
     optimal_theta = result.x
     plot_boundary(optimal_theta)
+    p = predict(optimal_theta, X)
+    m = y.size
+    arr = 1 * (p == y.reshape(1, m))
+
+    print('Train Accuracy: {} %'.format(np.mean(arr) * 100))
 
 
 if __name__ == '__main__':
