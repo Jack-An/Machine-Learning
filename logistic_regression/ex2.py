@@ -8,7 +8,7 @@ def main():
     m, _ = data.shape
     X = data[:, 0:2].reshape(m, 2)
     y = data[:, 2].reshape(m, 1)
-    plot(X, y)
+    plot(X, y, 'Admitted', 'Not admitted', 'Exam 1 score', 'Exam 2 score')
     m, n = X.shape
     X = np.c_[np.ones(m), X]
     initial_theta = np.zeros(X.shape[1])
@@ -37,7 +37,8 @@ def main():
           'probability of {} '.format(prob))
     p = predict(optimal_theta, X)
     arr = 1 * (p == y.reshape(1, m))
-    print('Train Accuracy: {} %'.format(np.mean(arr)*100))
+
+    print('Train Accuracy: {} %'.format(np.mean(arr) * 100))
 
 
 if __name__ == '__main__':
