@@ -2,36 +2,38 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot(X, y, label1, label2, x_label, y_label):
+def plot(X, y):
     pos = np.nonzero(y == 1)[0]
     neg = np.nonzero(y == 0)[0]
     a = X[pos, :]
     b = X[neg, :]
-    plt.scatter(a[:, 0], a[:, 1], marker='+', s=15, label=label1)
-    plt.scatter(b[:, 0], b[:, 1], marker='o', s=15, label=label2)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.legend()
-    plt.pause(5)
-    plt.close()
+    p1 = plt.scatter(a[:, 0], a[:, 1], marker='+', s=25)
+    p2 = plt.scatter(b[:, 0], b[:, 1], marker='o', s=25)
+    return plt, p1, p2
 
 
-def plot_decision_boundary(theta, X, y):
-    X = X[:, 1:]
-    pos = np.nonzero(y == 1)[0]
-    neg = np.nonzero(y == 0)[0]
-    a = X[pos, :]
-    b = X[neg, :]
-    plot_x = np.array([np.min(X[:, 0]) - 2, np.max(X[:, 0]) + 2])
-    plot_y = (-1 / theta[2]) * (theta[1] * plot_x + theta[0])
-    plt.scatter(a[:, 0], a[:, 1], marker='+', s=15, label='Admitted')
-    plt.scatter(b[:, 0], b[:, 1], marker='o', s=15, label='Not admitted')
-    plt.plot(plot_x, plot_y, color='blue', label='Decision Boundary')
-    plt.xlabel('Exam 1 score')
-    plt.ylabel('Exam 2 score')
-    plt.legend()
-    plt.pause(5)
-    plt.close()
+def plot_decision_boundary(theta, X, y, lambd=0):
+    pl, p1, p2 = plot(X[:, 1:3], y)
+    if X.shape[1] <= 3:
+        plot_x = np.array([np.min(X[:, 1]) - 2, np.max(X[:, 1]) + 2])
+        plot_y = (-1 / theta[2]) * (theta[1] * plot_x + theta[0])
+        p3 = plt.plot(plot_x, plot_y, color='blue', label='Decision Boundary')[0]
+        pl.legend((p1, p2, p3), ('Admitted', 'Not Admitted', 'Decision Boundary'))
+        pl.axis([30, 100, 30, 100])
+        pl.show()
+    else:
+        u = np.linspace(-1, 1.5, 50)
+        v = np.linspace(-1, 1.5, 50)
+        z = np.zeros((len(u), len(v)))
+        for i in range(len(u)):
+            for j in range(len(v)):
+                z[i][j] = np.dot(map_feature(np.array([[u[i]]]), np.array([[v[j]]])), theta)
+        z = z.T
+        pl.contour(u, v, z, [0])
+        pl.annotate('With lambda = {}'.format(lambd),
+                    xy=(0.25, 0.25), xytext=(0.5, 0.5))
+        pl.legend((p1, p2), ('y = 1', 'y = 0'), numpoints=1, handlelength=0)
+        plt.show()
 
 
 def sigmoid(z):
@@ -87,18 +89,16 @@ def predict(theta, X):
 
 
 def map_feature(x1, x2):
-    '''
+    """
     Maps the two input features to quadratic features.
     Returns a new feature array with more features, comprising of
     X1, X2, X1 ** 2, X2 ** 2, X1*X2, X1*X2 ** 2, etc...
     Inputs X1, X2 must be the same size
-    '''
+    """
     x1.shape = (x1.size, 1)
     x2.shape = (x2.size, 1)
     degree = 6
     out = np.ones(shape=(x1[:, 0].size, 1))
-
-    m, n = out.shape
 
     for i in range(1, degree + 1):
         for j in range(i + 1):
@@ -106,28 +106,3 @@ def map_feature(x1, x2):
             out = np.append(out, r, axis=1)
 
     return out
-
-
-def plot_boundary(theta):
-    data = np.genfromtxt('ex2data2.txt', delimiter=',')
-    X = data[:, [0, 1]]
-    y = data[:, -1]
-    pos = np.nonzero(y == 1)[0]
-    neg = np.nonzero(y == 0)[0]
-    a = X[pos, :]
-    b = X[neg, :]
-    plt.scatter(a[:, 0], a[:, 1], marker='+', s=15, label='y=1')
-    plt.scatter(b[:, 0], b[:, 1], marker='o', s=15, label='y=0')
-    plt.xlabel('Microchip Test 1')
-    plt.ylabel('Microchip Test 2')
-    x1 = np.linspace(-1, 1.5, 50)
-    x2 = np.linspace(-1, 1.5, 50)
-    z = np.zeros((len(x1), len(x2)))
-    for i in range(len(x1)):
-        for j in range(len(x2)):
-            feature = map_feature(np.array([x1[i]]), np.array([x2[j]]))
-            z[i][j] = np.dot(theta, feature.T)
-    z = z.T
-    u, v = np.meshgrid(x1, x2)
-    plt.contour(x1, x2, z, [0])
-    plt.show()

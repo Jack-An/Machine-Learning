@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.optimize as op
-from logistic_regression.alglib import plot, map_feature, cost_reg, gradient_reg, plot_boundary, predict
+from logistic_regression.alglib import plot, map_feature, cost_reg, gradient_reg, plot_decision_boundary, predict
 import matplotlib.pyplot as plt
 
 
@@ -8,8 +8,11 @@ def main():
     data = np.genfromtxt('ex2data2.txt', delimiter=',')
     X = data[:, [0, 1]]
     y = data[:, -1]
-    plot(X, y, 'y=1', 'y=0', 'Microchip Test 1', 'Microchip Test 2')
-
+    pl, p1, p2 = plot(X, y)
+    pl.xlabel('Microchip Test 1')
+    pl.ylabel('Microchip Test 2')
+    pl.legend((p1, p2), ('y=1', 'y=0'), numpoints=1, handlelength=0)
+    pl.show()
     # Regularized Logistic Regression
     X = map_feature(X[:, 0], X[:, 1])
 
@@ -29,20 +32,21 @@ def main():
     print(grad[:5])
 
     initial_theta = np.zeros(X.shape[1])
-    lambd = 1
-    # Regularization and Accuracies
-    result = op.minimize(fun=cost_reg,
-                         x0=initial_theta,
-                         args=(X, y, lambd),
-                         method='TNC',
-                         jac=gradient_reg)
-    optimal_theta = result.x
-    plot_boundary(optimal_theta)
-    p = predict(optimal_theta, X)
-    m = y.size
-    arr = 1 * (p == y.reshape(1, m))
-
-    print('Train Accuracy: {} %'.format(np.mean(arr) * 100))
+    lambdas = [0, 1, 10, 100]
+    for lambd in lambdas:
+        # Regularization and Accuracies
+        result = op.minimize(fun=cost_reg,
+                             x0=initial_theta,
+                             args=(X, y, lambd),
+                             method='TNC',
+                             jac=gradient_reg)
+        optimal_theta = result.x
+        plot_decision_boundary(optimal_theta, X, y, lambd)
+        pl.show()
+        p = predict(optimal_theta, X)
+        m = y.size
+        arr = 1 * (p == y.reshape(1, m))
+        print('Train Accuracy (with lambda ={})  : {} %'.format(lambd, np.mean(arr) * 100))
 
 
 if __name__ == '__main__':
