@@ -1,18 +1,50 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
 
-
-def plot(x, y):
-    plt.scatter(x, y, marker='x', color='r')
-    plt.pause(5)
-    plt.close()
+def plot(X, y):
+    p1 = plt.scatter(X, y, marker='x', color='r')
+    return plt, p1
 
 
 def plot_line(X, y, theta):
-    plt.scatter(X[:, 1], y, marker='x', color='r')
-    plt.plot(X[:, 1], X.dot(theta), color='blue')
-    plt.pause(5)
-    plt.close()
+    pl, p1 = plot(X[:, 1], y)
+    pl.plot(X[:, 1], X.dot(theta), color='blue')
+    pl.show()
+
+
+def plot_surf(X, y):
+    theta0_vals = np.linspace(-10, 10, 100)
+    theta1_vals = np.linspace(-1, 4, 100)
+    J_vals = np.zeros((theta0_vals.size, theta1_vals.size))
+
+    for i in range(theta0_vals.size):
+        for j in range(theta1_vals.size):
+            t = np.array([[theta0_vals[i]],
+                          [theta1_vals[j]]])
+            J_vals[i][j] = compute_cost(X, y, t)
+    J_vals = J_vals.T
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    theta0_vals, theta1_vals = np.meshgrid(theta0_vals, theta1_vals)
+    surf = ax.plot_surface(theta0_vals, theta1_vals, J_vals, cmap=cm.coolwarm, rstride=2)
+    fig.colorbar(surf)
+    plt.xlabel(r'$\theta_0$')
+    plt.ylabel(r'$\theta_1$')
+    plt.show()
+    return theta0_vals, theta1_vals, J_vals
+
+
+def plot_contour(theta, theta0_vals, theta1_vals, J_vals):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    cset = plt.contour(theta0_vals, theta1_vals, J_vals, np.logspace(-2, 3, 20), cmap=cm.coolwarm)
+    fig.colorbar(cset)
+    plt.xlabel(r'$\theta_0$')
+    plt.ylabel(r'$\theta_1$')
+    plt.plot(theta[0, 0], theta[1, 0], 'rx', markersize=10, linewidth=2)
+    plt.show()
 
 
 def compute_cost(X, y, theta):
