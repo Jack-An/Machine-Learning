@@ -45,8 +45,8 @@ def cost(theta, X, y):
     m, n = X.shape
     theta = theta.reshape(n, 1)
     prediction = sigmoid(X.dot(theta))
-    left = -(y.transpose().dot(np.log(prediction)))
-    right = ((1 - y).transpose()).dot(np.log(1 - prediction))
+    left = -(y.T.dot(np.log(prediction)))
+    right = (1 - y).T.dot(np.log(1 - prediction))
     J = (1 / m) * (left - right)
     return J
 
@@ -55,6 +55,7 @@ def cost_reg(theta, X, y, lambd):
     J = cost(theta, X, y)
     m, n = X.shape
     temp = theta.copy()
+    temp[0] = 0
     lambda_part = (lambd / (2 * m)) * sum(np.square(temp))
     return J + lambda_part
 
