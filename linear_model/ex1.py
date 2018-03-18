@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from linear_model.alglib import plot, plot_line, compute_cost, gradient_descent, plot_surf, plot_contour
 
-from matplotlib import cm
 
 
 def main():
