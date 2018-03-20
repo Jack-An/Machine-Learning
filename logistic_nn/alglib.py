@@ -110,3 +110,14 @@ def one_vs_all(X, y, num_labels, lambd):
 def predict(all_theta, X):
     X = np.hstack((np.ones((X.shape[0], 1)), X))
     return sigmoid(np.dot(X, all_theta.T)).argmax(axis=1).reshape(-1, 1)
+
+
+def predict_nn(Theta1, Theta2, X):
+    m = X.shape[0]
+    X = np.hstack((np.ones((m, 1)), X))
+    a2 = sigmoid(np.dot(X, Theta1.T))
+    a2 = np.hstack((np.ones((m, 1)), a2))
+    h_theta = sigmoid(np.dot(a2, Theta2.T))
+    p = h_theta.argmax(axis=1).reshape(-1, 1)
+    p += 1
+    return p

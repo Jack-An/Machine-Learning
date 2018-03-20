@@ -37,9 +37,9 @@ def main():
     lambd = 0.1
     all_theta = one_vs_all(X, y, num_labels, lambd)
     p = predict(all_theta, X)
-    print('Train Accuracy: {0:.3f}'.format(np.mean(p == y) * 100))
+    print('Train Accuracy: {0:.2f}'.format(np.mean(p == y) * 100))
 
-    # Predict
+    Predict
     r = np.random.permutation(m)
     X_temp = X[r, :]
     predictions = predict(all_theta, X_temp)

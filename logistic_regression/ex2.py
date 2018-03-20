@@ -17,11 +17,11 @@ def main():
     m, n = X.shape
     X = np.c_[np.ones(m), X]
     initial_theta = np.zeros(X.shape[1])
-    print('Cost at initial theta (zeros): {}'.format(cost(initial_theta, X, y)[0][0]))
+    print('Cost at initial theta (zeros): {:2.3f}'.format(cost(initial_theta, X, y)[0][0]))
     print('Gradient at initial theta (zeros):')
     print(gradient(initial_theta, X, y))
     test_theta = np.array([-24, 0.2, 0.2])
-    print('Cost at initial theta (zeros): {}'.format(cost(test_theta, X, y)[0][0]))
+    print('Cost at initial theta (zeros): {:2.3f}'.format(cost(test_theta, X, y)[0][0]))
     print('Gradient at initial theta (zeros):')
     print(gradient(test_theta, X, y))
     result = op.minimize(fun=cost, x0=initial_theta,
@@ -40,11 +40,11 @@ def main():
     # predict and Accuracies
     prob = sigmoid(np.array([1, 45, 85]).dot(optimal_theta))
     print('For a student with scores 45 and 85, we predict an admission '
-          'probability of {} '.format(prob))
+          'probability of {:2.3f} '.format(prob))
     p = predict(optimal_theta, X)
     arr = 1 * (p == y.reshape(1, m))
 
-    print('Train Accuracy: {} %'.format(np.mean(arr) * 100))
+    print('Train Accuracy: {:2.3f} %'.format(np.mean(arr) * 100))
 
 
 if __name__ == '__main__':

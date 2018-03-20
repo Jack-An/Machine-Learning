@@ -21,13 +21,13 @@ def main():
     lambd = 1
     cost = cost_reg(initial_theta, X, y, lambd)
     grad = gradient_reg(initial_theta, X, y, lambd)
-    print('Cost at initial theta (zeros): {}'.format(cost[0]))
+    print('Cost at initial theta (zeros): {:2.4f}'.format(cost[0]))
     print('Gradient at initial theta (zeros) - first five values only:')
     print(grad[:5])
     test_theta = np.ones(X.shape[1])
     cost = cost_reg(test_theta, X, y, 10)
     grad = gradient_reg(test_theta, X, y, 10)
-    print('Cost at test theta (with lambda = 10): {}'.format(cost[0]))
+    print('Cost at test theta (with lambda = 10): {:2.4f}'.format(cost[0]))
     print('Gradient at test theta  - first five values only:')
     print(grad[:5])
 
@@ -46,7 +46,7 @@ def main():
         p = predict(optimal_theta, X)
         m = y.size
         arr = 1 * (p == y.reshape(1, m))
-        print('Train Accuracy (with lambda ={})  : {} %'.format(lambd, np.mean(arr) * 100))
+        print('Train Accuracy (with lambda ={:d})  : {:2.3f} %'.format(lambd, np.mean(arr) * 100))
 
 
 if __name__ == '__main__':

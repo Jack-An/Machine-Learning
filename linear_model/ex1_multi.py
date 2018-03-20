@@ -25,15 +25,14 @@ def main():
     plt.plot(x_axis, his)
     plt.xlabel('Number of iterations')
     plt.ylabel('Cost J')
-    plt.pause(5)
-    plt.close()
+    plt.show()
     print(' Theta computed from gradient descent: ')
     print(theta)
 
     # prediction
     price = np.array([1, (1650 - mu[0][0]) / sigma[0][0], (3 - mu[0][1]) / sigma[0][1]]).dot(theta)
-    print('Predicted price of a 1650 sq-ft, 3 br house '
-          '(using gradient descent):\n $ {}\n'.format(price[0]))
+    print(' Predicted price of a 1650 sq-ft, 3 br house '
+          '(using gradient descent):\n $ {:2.3f}\n'.format(price[0]))
 
     # normal equation
 
@@ -44,13 +43,13 @@ def main():
     m = y.size
     X = np.c_[np.ones(m), X]
     theta = normal_eqn(X, y)
-    print('Theta computed from the normal equations: ')
+    print(' Theta computed from the normal equations: ')
     print(theta)
 
     # prediction
     price = np.array([1, 1650, 3]).dot(theta)
-    print('Predicted price of a 1650 sq-ft, 3 br house '
-          '(using normal equations):\n ${}'.format(price[0]))
+    print(' Predicted price of a 1650 sq-ft, 3 br house '
+          '(using normal equations):\n $ {:2.3f}'.format(price[0]))
 
 
 if __name__ == '__main__':
